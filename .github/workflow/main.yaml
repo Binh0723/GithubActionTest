@@ -1,0 +1,35 @@
+name: CI/CD Pipeline
+
+# Trigger: Run this workflow on pushes to the 'main' branch
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # Job 1: Build and Test
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+  # Job 2: Deploy (Only runs if Job 1 passes)
+  deploy:
+    needs: build-and-test  # This ensures strict ordering
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Simulate Deployment
+        run: echo "🚀 Deploying application to production server..."
